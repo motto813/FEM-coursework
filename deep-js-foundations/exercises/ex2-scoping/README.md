@@ -11,3 +11,7 @@
 	- should certain variable declarations be contained in explicit blocks of scope?
 
 4. **BONUS:** How would you describe to a coworker or boss the improvements in readability after applying your knowledge of scoped declarations to this code? Write out a few sentences.
+
+    - Using the block scope where the projectId is saved to the project entry object lets the reader know that the projectId indeed just has that purpose.
+    - Using consts for the literal values tells the reader what the literal value means when it occurs in the code.  Consts for the html templates makes sense as they are strings and shouldn't ever change.
+    - Using the block scope for handleClick makes it obvious where it's used in initUI.  Naming the callback function for handleClick describes exactly what it's doing.
