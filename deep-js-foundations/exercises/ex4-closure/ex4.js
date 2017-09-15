@@ -170,8 +170,14 @@ function setupWorkDescription(workEntryData,$workDescription) {
 	$workDescription.text(formatWorkDescription(workEntryData.description));
 
 	if (workEntryData.description.length > maxVisibleWorkDescriptionLength) {
-		$workDescription.addClass("shortened");
-		$workDescription.on("click", displayFullDescription);
+		$workDescription
+			.addClass("shortened")
+			.on("click", function displayFullDescription() {
+				$workDescription
+					.removeClass("shortened")
+					.off("click", displayFullDescription)
+					.text(workEntryData.description);
+			});
 	}
 
 	function displayFullDescription() {
