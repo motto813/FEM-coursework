@@ -1,3 +1,28 @@
+const projectTemplate = "<div class='project-entry'><h3 class='project-description' rel='js-project-description'></h3><ul class='work-entries' rel='js-work-entries'></ul><span class='work-time' rel='js-work-time'></span></div>";
+const workEntryTemplate = "<li class='work-entry'><span class='work-time' rel='js-work-time'></span><span class='work-description' rel='js-work-description'></span></li>";
+const maxVisibleWorkDescriptionLength = 20;
+const minWorkDescriptionLength = 5;
+const maxWorkTime = 600;
+
+var projects = [];
+
+var $workEntryForm;
+var $workEntrySelectProject;
+var $workEntryDescription;
+var $workEntryTime;
+var $workEntrySubmit;
+var $totalTime;
+var $projectList;
+
+initUI();
+
+// hard coding some initial data
+addProject("client features");
+addProject("overhead");
+addProject("backlog");
+
+//***************************************
+
 function initUI() {
 	$workEntryForm = $("[rel*=js-work-entry-form");
 	$workEntrySelectProject = $workEntryForm.find("[rel*=js-select-project]");
@@ -7,27 +32,27 @@ function initUI() {
 	$totalTime = $("[rel*=js-total-work-time]");
 	$projectList = $("[rel*=js-project-list]");
 
-	$workEntrySubmit.on("click",handleClick);
+	$workEntrySubmit.on("click",handleWorkFormClick);
+}
 
-	function handleClick(){
-		var projectId = $workEntrySelectProject.val();
-		var description = $workEntryDescription.val();
-		var minutes = $workEntryTime.val();
+function handleWorkFormClick(){
+	var projectId = $workEntrySelectProject.val();
+	var description = $workEntryDescription.val();
+	var minutes = $workEntryTime.val();
 
-		if (!validateWorkEntry(description,minutes)) {
-			alert("Oops, bad entry. Try again.");
-			$workEntryDescription[0].focus();
-			return;
-		}
+	if (!validateWorkEntry(description,minutes)) {
+		alert("Oops, bad entry. Try again.");
+		$workEntryDescription[0].focus();
+		return;
+	}
 
-		submitWorkEntry();
+	submitWorkEntry();
 
-		function submitWorkEntry() {
-			$workEntryDescription.val("");
-			$workEntryTime.val("");
-			addWorkToProject(Number(projectId),description,Number(minutes));
-			$workEntryDescription[0].focus();
-		}
+	function submitWorkEntry() {
+		$workEntryDescription.val("");
+		$workEntryTime.val("");
+		addWorkToProject(Number(projectId),description,Number(minutes));
+		$workEntryDescription[0].focus();
 	}
 }
 
@@ -172,29 +197,3 @@ function formatTime(time) {
 	if (minutes < 10) minutes = `0${minutes}`;
 	return `${hours}:${minutes}`;
 }
-
-
-// **************************
-
-const projectTemplate = "<div class='project-entry'><h3 class='project-description' rel='js-project-description'></h3><ul class='work-entries' rel='js-work-entries'></ul><span class='work-time' rel='js-work-time'></span></div>";
-const workEntryTemplate = "<li class='work-entry'><span class='work-time' rel='js-work-time'></span><span class='work-description' rel='js-work-description'></span></li>";
-const maxVisibleWorkDescriptionLength = 20;
-const minWorkDescriptionLength = 5;
-const maxWorkTime = 600;
-
-var projects = [];
-
-var $workEntryForm;
-var $workEntrySelectProject;
-var $workEntryDescription;
-var $workEntryTime;
-var $workEntrySubmit;
-var $totalTime;
-var $projectList;
-
-initUI();
-
-// hard coding some initial data
-addProject("client features");
-addProject("overhead");
-addProject("backlog");
