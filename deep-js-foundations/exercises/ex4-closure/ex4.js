@@ -171,8 +171,19 @@ function setupWorkDescription(workEntryData,$workDescription) {
 
 	if (workEntryData.description.length > maxVisibleWorkDescriptionLength) {
 		$workDescription.addClass("shortened");
-		// TODO
+		$workDescription.on("click", displayFullDescription);
 	}
+
+	function displayFullDescription() {
+		$workDescription.removeClass("shortened");
+		$workDescription.off("click");
+		$workDescription.text(workEntryData.description);
+	}
+}
+
+function displayFullDescription() {
+	console.log(this);
+	$(this).removeClass("shortened");
 }
 
 function updateProjectTotalTime(projectEntryData) {
