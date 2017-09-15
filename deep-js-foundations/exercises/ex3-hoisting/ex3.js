@@ -7,25 +7,27 @@ function initUI() {
 	$totalTime = $("[rel*=js-total-work-time]");
 	$projectList = $("[rel*=js-project-list]");
 
-	{ let handleClick;
-		handleClick = function submitNewWorkEntry(){
-			var projectId = $workEntrySelectProject.val();
-			var description = $workEntryDescription.val();
-			var minutes = $workEntryTime.val();
+	$workEntrySubmit.on("click",handleClick);
 
-			if (!validateWorkEntry(description,minutes)) {
-				alert("Oops, bad entry. Try again.");
-				$workEntryDescription[0].focus();
-				return;
-			}
+	function handleClick(){
+		var projectId = $workEntrySelectProject.val();
+		var description = $workEntryDescription.val();
+		var minutes = $workEntryTime.val();
 
+		if (!validateWorkEntry(description,minutes)) {
+			alert("Oops, bad entry. Try again.");
+			$workEntryDescription[0].focus();
+			return;
+		}
+
+		submitWorkEntry();
+
+		function submitWorkEntry() {
 			$workEntryDescription.val("");
 			$workEntryTime.val("");
 			addWorkToProject(Number(projectId),description,Number(minutes));
 			$workEntryDescription[0].focus();
-		};
-
-		$workEntrySubmit.on("click",handleClick);
+		}
 	}
 }
 
