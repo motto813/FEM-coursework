@@ -254,7 +254,7 @@ function setupApp(UI){
 		if (entryIdx < (projectEntryData.work.length - 1)) {
 			return [ projectEntryData.work[entryIdx + 1].id, true ];
 		} else {
-			return [ projectEntryData.work[entryIdx - 1], false ];
+			return [ projectEntryData.work[entryIdx - 1].id, false ];
 		}
 	}
 }
