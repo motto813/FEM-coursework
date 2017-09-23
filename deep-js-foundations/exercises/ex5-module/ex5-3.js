@@ -84,6 +84,23 @@ function setupUI() {
 		$workEntrySubmit.on("click",submitNewWorkEntry);
 	}
 
+	function submitNewWorkEntry() {
+		var projectId = $workEntrySelectProject.val();
+		var description = $workEntryDescription.val();
+		var minutes = $workEntryTime.val();
+
+		if (!Helpers.validateWorkEntry(description,minutes)) {
+			alert("Oops, bad entry. Try again.");
+			$workEntryDescription[0].focus();
+			return;
+		}
+
+		$workEntryDescription.val("");
+		$workEntryTime.val("");
+		App.addWorkToProject(Number(projectId),description,Number(minutes));
+		$workEntryDescription[0].focus();
+	}
+
 	function addProjectToList(project) {
 		var $project = $(projectTemplate);
 		$project.attr("data-project-id",project.getId());
@@ -112,9 +129,10 @@ function setupUI() {
 
 		workElements[workEntryData.id] = $workEntry;
 
+		console.log(workElements);
+
 		// multiple work entries now?
-		var workEntryCount = project.getWorkEntryCount();
-		if (workEntryCount > 1) {
+		if (project.getWorkEntryCount() > 1) {
 			{ let adjacentWorkEntryId, insertBefore;
 				[ adjacentWorkEntryId, insertBefore ] = project.getWorkEntryLocation(workEntryData.id);
 
@@ -144,23 +162,6 @@ function setupUI() {
 		else {
 			$totalTime.text("").hide();
 		}
-	}
-
-	function submitNewWorkEntry() {
-		var projectId = $workEntrySelectProject.val();
-		var description = $workEntryDescription.val();
-		var minutes = $workEntryTime.val();
-
-		if (!Helpers.validateWorkEntry(description,minutes)) {
-			alert("Oops, bad entry. Try again.");
-			$workEntryDescription[0].focus();
-			return;
-		}
-
-		$workEntryDescription.val("");
-		$workEntryTime.val("");
-		App.addWorkToProject(Number(projectId),description,Number(minutes));
-		$workEntryDescription[0].focus();
 	}
 
 	function setupWorkDescription(workEntryData,$workDescription) {
@@ -193,7 +194,7 @@ function setupApp(UI){
 	// **************************
 
 	function addProject(description) {
-		var project = new Project(description);
+		var project = Project(description);
 
 		projects.push(project);
 
@@ -208,7 +209,7 @@ function setupApp(UI){
 	}
 
 	function addWorkToProject(projectId,description,minutes) {
-		totalTime += minutes;
+		totalTime = (totalTime || 0) + minutes;
 
 		var project = findProjectEntry(projectId);
 		var workEntryData = { id: project.getWorkEntryCount() + 1, description: description, time: minutes };
@@ -255,13 +256,13 @@ function Project(description) {
 	function addWork(workEntryData) {
 		workEntries.push(workEntryData);
 
-		if (getWorkEntryCount().length > 1) {
+		if (getWorkEntryCount() > 1) {
 			sortWorkEntries();
 		}
 	}
 
 	function sortWorkEntries() {
-		workEntries = workEntries.slice().sort(function sortTimeDescending(a,b){
+		workEntries.sort(function sortTimeDescending(a,b){
 			return b.time - a.time;
 		});
 	}
