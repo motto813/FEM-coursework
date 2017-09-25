@@ -118,7 +118,9 @@ function setupUI() {
 	}
 
 	function addWorkEntryToList(project, workEntryData) {
-		var $projectEntry = projectElements[project.getId()];
+		var projectId = project.getId();
+
+		var $projectEntry = projectElements[projectId];
 		var $projectWorkEntries = $projectEntry.find("[rel*=js-work-entries]");
 
 		// create a new DOM element for the work entry
@@ -127,8 +129,9 @@ function setupUI() {
 		$workEntry.find("[rel*=js-work-time]").text(Helpers.formatTime(workEntryData.time));
 		setupWorkDescription(workEntryData,$workEntry.find("[rel*=js-work-description]"));
 
-		workElements[workEntryData.id] = $workEntry;
+		workElements[projectId + workEntryData.id] = $workEntry;
 
+		console.log("work elements");
 		console.log(workElements);
 
 		// multiple work entries now?
@@ -137,9 +140,9 @@ function setupUI() {
 				[ adjacentWorkEntryId, insertBefore ] = project.getWorkEntryLocation(workEntryData.id);
 
 				if (insertBefore) {
-					workElements[adjacentWorkEntryId].before($workEntry);
+					workElements[projectId + adjacentWorkEntryId].before($workEntry);
 				} else {
-					workElements[adjacentWorkEntryId].after($workEntry);
+					workElements[projectId + adjacentWorkEntryId].after($workEntry);
 				}
 			}
 		}
@@ -212,9 +215,14 @@ function setupApp(UI){
 		totalTime = (totalTime || 0) + minutes;
 
 		var project = findProjectEntry(projectId);
-		var workEntryData = { id: project.getWorkEntryCount() + 1, description: description, time: minutes };
+		var workEntryData = { description: description, time: minutes };
+
+		console.log("initial data");
+		console.log(workEntryData);
 
 		project.addWork(workEntryData);
+		console.log("after added to project");
+		console.log(workEntryData);
 
 		UI.addWorkEntryToList(project, workEntryData);
 		UI.updateProjectTotalTime(project);
@@ -254,6 +262,9 @@ function Project(description) {
 	}
 
 	function addWork(workEntryData) {
+		console.log("work entries");
+		console.log(workEntries);
+		workEntryData.id = workEntries.length + 1;
 		workEntries.push(workEntryData);
 
 		if (getWorkEntryCount() > 1) {
