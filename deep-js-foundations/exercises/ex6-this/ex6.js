@@ -4,12 +4,12 @@ var Helpers = {
 	maxWorkTime: 600,
 
 	validateWorkEntry(description,minutes) {
-		if (description.length < Helpers.minWorkDescriptionLength) return false;
+		if (description.length < this.minWorkDescriptionLength) return false;
 		if (
 			/^\s*$/.test(minutes) ||
 			Number.isNaN(Number(minutes)) ||
 			minutes < 0 ||
-			minutes > Helpers.maxWorkTime
+			minutes > this.maxWorkTime
 		) {
 			return false;
 		}
@@ -17,8 +17,8 @@ var Helpers = {
 		return true;
 	},
 	formatWorkDescription(description) {
-		if (description.length > Helpers.maxVisibleWorkDescriptionLength) {
-			description = `${description.substr(0,Helpers.maxVisibleWorkDescriptionLength)}...`;
+		if (description.length > this.maxVisibleWorkDescriptionLength) {
+			description = `${description.substr(0,this.maxVisibleWorkDescriptionLength)}...`;
 		}
 		return description;
 	},
