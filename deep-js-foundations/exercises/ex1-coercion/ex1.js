@@ -20,7 +20,7 @@ function initUI() {
 
 		$workEntryDescription.val("");
 		$workEntryTime.val("");
-		addWorkToProject(projectId,description,minutes);
+		addWorkToProject(Number(projectId),description,Number(minutes));
 		$workEntryDescription[0].focus();
 	};
 
@@ -28,7 +28,17 @@ function initUI() {
 }
 
 function validateWorkEntry(description,minutes) {
-	// TODO
+	if (description.length < 5) return false;
+	if (
+		/^\s*$/.test(minutes) ||
+		Number.isNaN(Number(minutes)) ||
+		minutes < 0 ||
+		minutes > 600
+	) {
+		return false;
+	}
+
+	return true;
 }
 
 function addProject(description) {
@@ -65,10 +75,10 @@ function findProjectEntry(projectId) {
 }
 
 function addWorkToProject(projectId,description,minutes) {
-	projects.time = projects.time + minutes;
+	projects.time = (projects.time || 0) + minutes;
 
 	var projectEntryData = findProjectEntry(projectId);
-	projectEntryData.time = projectEntryData.time + minutes;
+	projectEntryData.time = (projectEntryData.time || 0) + minutes;
 
 	// create a new work entry for the list
 	var workEntryData = { id: projectEntryData.work.length + 1, description: description, time: minutes };
@@ -147,8 +157,8 @@ function formatWorkDescription(description) {
 function formatTime(time) {
 	var hours = Math.floor(time / 60);
 	var minutes = time % 60;
-	if (minutes < 10) minutes = `0${minutes}`;
 	if (hours == 0 && minutes == 0) return "";
+	if (minutes < 10) minutes = `0${minutes}`;
 	return `${hours}:${minutes}`;
 }
 
